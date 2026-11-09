@@ -9,7 +9,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
-docker build -t "$IMAGE" .
+if [ "${SKIP_BUILD:-false}" != "true" ]; then
+  docker build -t "$IMAGE" .
+fi
+
 docker run -d --name "$NAME" -p 18080:8080 "$IMAGE" >/dev/null
 
 i=0
