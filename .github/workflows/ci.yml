@@ -1,3 +1,4 @@
+
 name: Docker CI
 
 on:
@@ -15,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
@@ -29,10 +30,12 @@ jobs:
           push: false
           tags: dashops-demo:ci
 
-      - name: Run smoke test
-        run: IMAGE=dashops-demo:ci SKIP_BUILD=true ./tests/smoke_test.sh
+      - name: Run container smoke test
+        run: |
+          IMAGE=dashops-demo:ci SKIP_BUILD=true sh tests/smoke_test.sh
 
-      - name: Scan for leaked secrets
+      - name: Scan repository for leaked secrets
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
